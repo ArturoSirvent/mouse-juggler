@@ -27,7 +27,7 @@ jobs:
             asset_name: mouse-juggler-macos
             pyinstaller_args: --windowed
             python-version: 3.12
-          - os: ubuntu-20.04 # Using older Ubuntu for better compatibility
+          - os: ubuntu-22.04 # Using older Ubuntu for better compatibility
             asset_name: mouse-juggler-linux
             pyinstaller_args: ""
             python-version: 3.12
