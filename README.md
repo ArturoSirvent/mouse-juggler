@@ -3,21 +3,21 @@
 ![Status](https://img.shields.io/badge/Status-Stable-green)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Python](https://img.shields.io/badge/Python-3.8--3.12-yellow)
-![Release](https://img.shields.io/github/v/release/username/mouse-juggler?include_prereleases&label=Latest%20Release)
+![Release](https://img.shields.io/github/v/release/ArturoSirvent/mouse-juggler?include_prereleases&label=Latest%20Release)
 
 Mouse Juggler is an automation tool to move the mouse in a natural way, simulating human movements using Bezier curves. It's useful for preventing inactivity lockouts in computer systems or for simulating online presence.
 
 ![Screenshot](docs/images/screenshot.png)
 
-## 📥 Descargas Rápidas
+## 📥 Quick Downloads
 
-| Sistema | Enlace de Descarga                                                                                                   |
-| ------- | -------------------------------------------------------------------------------------------------------------------- |
-| Windows | [Descargar .exe](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-win.exe)           |
-| macOS   | [Descargar ejecutable macOS](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-macos) |
-| Linux   | [Descargar ejecutable Linux](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-linux) |
+| System  | Download Link                                                                                                            |
+| ------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Windows | [Download .exe](https://github.com/ArturoSirvent/mouse-juggler/releases/latest/download/mouse-juggler-win.exe)           |
+| macOS   | [Download macOS executable](https://github.com/ArturoSirvent/mouse-juggler/releases/latest/download/mouse-juggler-macos) |
+| Linux   | [Download Linux executable](https://github.com/ArturoSirvent/mouse-juggler/releases/latest/download/mouse-juggler-linux) |
 
-Para todas las versiones disponibles, visita la [página de Releases](https://github.com/username/mouse-juggler/releases).
+For all available versions, visit the [Releases page](https://github.com/ArturoSirvent/mouse-juggler/releases).
 
 ## Features
 
@@ -30,7 +30,7 @@ Para todas las versiones disponibles, visita la [página de Releases](https://gi
 
 ## Requirements
 
--   Python 3.8 hasta 3.12
+-   Python 3.8 to 3.12
 -   Dependencies:
     -   numpy
     -   pyautogui
@@ -38,28 +38,28 @@ Para todas las versiones disponibles, visita la [página de Releases](https://gi
 
 ## Installation
 
-### Opción 1: Descargar Ejecutable Independiente (Recomendado)
+### Option 1: Download Standalone Executable (Recommended)
 
-1. Ve a la sección de [Descargas](#-descargas-rápidas) arriba
-2. Descarga la versión apropiada para tu sistema operativo
-3. Ejecuta el archivo directamente - ¡no se requiere instalación!
+1. Go to the [Downloads](#-quick-downloads) section above
+2. Download the appropriate version for your operating system
+3. Run the file directly - no installation required!
 
-### Opción 2: Desde PyPI
+### Option 2: From PyPI
 
 ```bash
 pip install mouse-juggler
 ```
 
-### Opción 3: Desde el Código Fuente
+### Option 3: From Source Code
 
-1. Clona el repositorio:
+1. Clone the repository:
 
     ```bash
-    git clone https://github.com/username/mouse-juggler.git
+    git clone https://github.com/ArturoSirvent/mouse-juggler.git
     cd mouse-juggler
     ```
 
-2. Instala las dependencias:
+2. Install dependencies:
     ```bash
     pip install -r requirements.txt
     ```
@@ -133,30 +133,30 @@ pyinstaller --onefile --windowed --icon=docs/images/icon.icns --name=mouse-juggl
 
 The executable will be created in the `dist` directory.
 
-### Releases Automáticos
+### Automatic Releases
 
-Este proyecto usa GitHub Actions para generar automáticamente ejecutables para Windows, macOS y Linux cuando se publica un nuevo tag de versión. El workflow:
+This project uses GitHub Actions to automatically generate executables for Windows, macOS and Linux when a new version tag is published. The workflow:
 
-1. Compila ejecutables específicos para cada plataforma
-2. Crea una nueva Release en GitHub
-3. Adjunta los ejecutables a la release para facilitar la descarga
+1. Compiles platform-specific executables
+2. Creates a new GitHub Release
+3. Attaches the executables to the release for easy download
 
-Para crear una nueva release:
+To create a new release:
 
-1. Etiqueta el commit con una versión (ej. `v1.0.1`)
-2. Envía el tag a GitHub
-3. GitHub Actions automáticamente compilará y publicará la release
+1. Tag the commit with a version (e.g., `v1.0.1`)
+2. Push the tag to GitHub
+3. GitHub Actions will automatically build and publish the release
 
 ```bash
 git tag v1.0.1
 git push origin v1.0.1
 ```
 
-También puedes activar manualmente una release desde la pestaña GitHub Actions.
+You can also manually trigger a release from the GitHub Actions tab.
 
 ### Using pre-built binaries
 
-1. Go to the [Releases](https://github.com/username/mouse-juggler/releases) page
+1. Go to the [Releases](https://github.com/ArturoSirvent/mouse-juggler/releases) page
 2. Download the appropriate version for your operating system:
     - `mouse-juggler-win64.exe` for Windows
     - `mouse-juggler-macos` for macOS
