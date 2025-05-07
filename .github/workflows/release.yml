@@ -3,13 +3,13 @@ name: Release Build
 on:
   push:
     tags:
-      - 'v*' # Run when tag is pushed matching v*, like v1.0.0
+      - "v*" # Run when tag is pushed matching v*, like v1.0.0
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (without v prefix)'
+        description: "Version to release (without v prefix)"
         required: true
-        default: '1.0.0'
+        default: "1.0.0"
 
 jobs:
   build:
@@ -29,117 +29,111 @@ jobs:
             pyinstaller_args: --windowed
           - os: ubuntu-latest
             asset_name: mouse-juggler-linux
-            pyinstaller_args: ''
+            pyinstaller_args: ""
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
 
-    - name: Set Version from Tag or Input
-      id: set_version
-      run: |
-        if [[ "${{ github.event_name }}" == "push" ]]; then
-          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-        else
-          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-        fi
-      shell: bash
+      - name: Set Version from Tag or Input
+        id: set_version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          else
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          fi
+        shell: bash
 
-    - name: Build with PyInstaller
-      run: |
-        pyinstaller --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }} main.py
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }} main.py
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ matrix.asset_name }}
-        path: dist/${{ matrix.asset_name }}${{ matrix.os == 'windows-latest' && '.exe' || '' }}
+      - name: Upload Build Artifact
+        id: upload_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: dist/${{ matrix.asset_name }}${{ matrix.os == 'windows-latest' && '.exe' || '' }}
+          retention-days: 5
+          compression-level: 9 # Máxima compresión para ejecutables
+          overwrite: true
+
+      - name: Echo Artifact Info
+        run: |
+          echo "Artifact ID: ${{ steps.upload_artifact.outputs.artifact-id }}"
+          echo "Artifact URL: ${{ steps.upload_artifact.outputs.artifact-url }}"
+        shell: bash
 
   release:
     name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-    - name: Set Version from Tag or Input
-      id: set_version
-      run: |
-        if [[ "${{ github.event_name }}" == "push" ]]; then
-          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-        else
-          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-        fi
-      shell: bash
+      - name: Set Version from Tag or Input
+        id: set_version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          else
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          fi
+        shell: bash
 
-    - name: Download All Artifacts
-      uses: actions/download-artifact@v3
-      with:
-        path: artifacts
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: false
+          pattern: mouse-juggler-*
 
-    - name: Display Structure of Downloaded Artifacts
-      run: ls -R artifacts
+      - name: Prepare Release Assets
+        run: |
+          mkdir -p release_assets
+          cp artifacts/mouse-juggler-win.exe/mouse-juggler-win.exe release_assets/mouse-juggler-win-${{ env.VERSION }}.exe
+          cp artifacts/mouse-juggler-macos/mouse-juggler-macos release_assets/mouse-juggler-macos-${{ env.VERSION }}
+          cp artifacts/mouse-juggler-linux/mouse-juggler-linux release_assets/mouse-juggler-linux-${{ env.VERSION }}
+          chmod +x release_assets/mouse-juggler-macos-${{ env.VERSION }}
+          chmod +x release_assets/mouse-juggler-linux-${{ env.VERSION }}
+        shell: bash
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ env.VERSION }}
-        release_name: Mouse Juggler v${{ env.VERSION }}
-        draft: false
-        prerelease: false
-        body: |
-          # Mouse Juggler Release v${{ env.VERSION }}
-          
-          Automated release of Mouse Juggler v${{ env.VERSION }}.
-          
-          ## Downloads
-          - Windows: mouse-juggler-win.exe
-          - macOS: mouse-juggler-macos
-          - Linux: mouse-juggler-linux
-          
-          ## Installation
-          Download the appropriate executable for your operating system.
-          No installation needed - just download and run!
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Mouse Juggler v${{ env.VERSION }}
+          draft: false
+          prerelease: false
+          body: |
+            # Mouse Juggler Release v${{ env.VERSION }}
 
-    - name: Upload Windows Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/mouse-juggler-win.exe/mouse-juggler-win.exe
-        asset_name: mouse-juggler-win-${{ env.VERSION }}.exe
-        asset_content_type: application/octet-stream
+            Automated release of Mouse Juggler v${{ env.VERSION }}.
 
-    - name: Upload macOS Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/mouse-juggler-macos/mouse-juggler-macos
-        asset_name: mouse-juggler-macos-${{ env.VERSION }}
-        asset_content_type: application/octet-stream
+            ## Downloads
+            - Windows: [mouse-juggler-win-${{ env.VERSION }}.exe](./mouse-juggler-win-${{ env.VERSION }}.exe)
+            - macOS: [mouse-juggler-macos-${{ env.VERSION }}](./mouse-juggler-macos-${{ env.VERSION }})
+            - Linux: [mouse-juggler-linux-${{ env.VERSION }}](./mouse-juggler-linux-${{ env.VERSION }})
 
-    - name: Upload Linux Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/mouse-juggler-linux/mouse-juggler-linux
-        asset_name: mouse-juggler-linux-${{ env.VERSION }}
-        asset_content_type: application/octet-stream
+            ## Installation
+            Download the appropriate executable for your operating system.
+            No installation needed - just download and run!
+          files: |
+            release_assets/mouse-juggler-win-${{ env.VERSION }}.exe
+            release_assets/mouse-juggler-macos-${{ env.VERSION }}
+            release_assets/mouse-juggler-linux-${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

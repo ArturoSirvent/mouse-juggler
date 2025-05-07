@@ -11,11 +11,11 @@ Mouse Juggler is an automation tool to move the mouse in a natural way, simulati
 
 ## 📥 Descargas Rápidas
 
-| Sistema | Enlace de Descarga |
-|----------|--------------|
-| Windows | [Descargar .exe](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-win.exe) |
-| macOS | [Descargar ejecutable macOS](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-macos) |
-| Linux | [Descargar ejecutable Linux](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-linux) |
+| Sistema | Enlace de Descarga                                                                                                   |
+| ------- | -------------------------------------------------------------------------------------------------------------------- |
+| Windows | [Descargar .exe](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-win.exe)           |
+| macOS   | [Descargar ejecutable macOS](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-macos) |
+| Linux   | [Descargar ejecutable Linux](https://github.com/username/mouse-juggler/releases/latest/download/mouse-juggler-linux) |
 
 Para todas las versiones disponibles, visita la [página de Releases](https://github.com/username/mouse-juggler/releases).
 
