@@ -5,11 +5,12 @@
 ![Python](https://img.shields.io/badge/Python-3.8--3.12-yellow)
 ![Release](https://img.shields.io/github/v/release/ArturoSirvent/mouse-juggler?include_prereleases&label=Latest%20Release)
 
+<div align="center">
+  <img src="resources/icons/mouse-juggler.png" alt="Mouse Juggler Logo" width="230">
+</div>
+
 Mouse Juggler is an automation tool to move the mouse in a natural way, simulating human movements using Bezier curves. It's useful for preventing inactivity lockouts in computer systems or for simulating online presence.
 
-<div align="center">
-  <img src="resources/icons/mouse-juggler.png" alt="Mouse Juggler Logo" width="150">
-</div>
 ![Screenshot](docs/images/screenshot.png)
 
 ## 📥 Quick Downloads
