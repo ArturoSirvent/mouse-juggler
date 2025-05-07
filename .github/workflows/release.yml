@@ -18,18 +18,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        python-version: [3.8]
         include:
           - os: windows-latest
             asset_name: mouse-juggler-win.exe
             pyinstaller_args: --windowed --icon=docs/images/icon.ico
+            python-version: 3.12
           - os: macos-latest
             asset_name: mouse-juggler-macos
             pyinstaller_args: --windowed
+            python-version: 3.12
           - os: ubuntu-latest
             asset_name: mouse-juggler-linux
             pyinstaller_args: ""
+            python-version: 3.12
 
     steps:
       - uses: actions/checkout@v4
