@@ -6,6 +6,7 @@ This script:
 1. Creates executables for the current platform
 2. Generates pip-installable packages
 3. Creates GitHub release assets
+4. Publishes a proper GitHub release (not just tags)
 """
 
 import argparse
@@ -86,16 +87,29 @@ def create_zip_release(include_docs=True, include_source=True):
     # Look for the executable
     exe_name = f"mouse-juggler{extension}"
     exe_with_version = f"{base_name}-{VERSION}{extension}"
+    expected_path = f"dist/{base_name}"
     
-    if not os.path.exists(f"dist/{exe_with_version}"):
-        print(f"Error: Executable not found at dist/{exe_with_version}")
+    # PyInstaller naming might be different, check both possibilities
+    executable_paths = [
+        f"dist/{exe_with_version}",
+        f"dist/{base_name}{extension}"
+    ]
+    
+    executable_path = None
+    for path in executable_paths:
+        if os.path.exists(path):
+            executable_path = path
+            break
+    
+    if not executable_path:
+        print(f"Error: Executable not found in dist directory. Checked paths: {executable_paths}")
         return False
         
     # Create a ZIP file with the executable and documentation
     zip_name = f"dist/{base_name}-{VERSION}-full.zip"
     with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
         # Add executable
-        zipf.write(f"dist/{exe_with_version}", f"{base_name}{extension}")
+        zipf.write(executable_path, f"{base_name}{extension}")
         
         # Add documentation
         if include_docs:
@@ -132,18 +146,93 @@ def create_github_release_info():
         f.write("- Standalone executable support for Windows, macOS and Linux\n")
         f.write("- Improved GUI with better visual feedback\n")
         f.write("- Performance optimizations for smoother mouse movement\n\n")
-        f.write("## Download\n\n")
-        f.write("- [Windows Executable](mouse-juggler-win-{VERSION}.exe)\n")
-        f.write("- [macOS Executable](mouse-juggler-macos-{VERSION})\n")
-        f.write("- [Linux Executable](mouse-juggler-linux-{VERSION})\n")
-        f.write("- [Python Package (PyPI)](https://pypi.org/project/mouse-juggler)\n\n")
         f.write("## Installation\n\n")
         f.write("### Standalone Executable\n\n")
-        f.write("Download the appropriate executable for your platform and run it directly.\n\n")
+        f.write("Download the appropriate executable for your platform from the releases section and run it directly.\n\n")
         f.write("### Python Package\n\n")
         f.write("```\npip install mouse-juggler\n```\n")
     
     print(f"Created release notes: {notes_file}")
+    return True
+
+def create_github_release():
+    """Create a proper GitHub release with assets using GitHub CLI."""
+    if not shutil.which("gh"):
+        print("GitHub CLI not found. Please install it to create GitHub releases.")
+        print("Installation instructions: https://github.com/cli/cli#installation")
+        return False
+    
+    # Check if user is authenticated with GitHub CLI
+    auth_check = subprocess.run(
+        ["gh", "auth", "status"], 
+        capture_output=True, 
+        text=True
+    )
+    
+    if auth_check.returncode != 0:
+        print("GitHub CLI is not authenticated. Please run: gh auth login")
+        return False
+    
+    notes_file = "dist/RELEASE_NOTES.md"
+    if not os.path.exists(notes_file):
+        print(f"Release notes file not found: {notes_file}")
+        return False
+    
+    # Create the release
+    tag_name = f"v{VERSION}"
+    release_title = f"Mouse Juggler {VERSION}"
+    
+    # First create a tag if it doesn't exist
+    run_command(["git", "tag", "-a", tag_name, "-m", release_title])
+    run_command(["git", "push", "origin", tag_name])
+    
+    # Create the release from the tag
+    release_cmd = [
+        "gh", "release", "create",
+        tag_name,
+        "--title", release_title,
+        "--notes-file", notes_file
+    ]
+    
+    if not run_command(release_cmd):
+        return False
+    
+    # Upload assets
+    system = platform.system()
+    base_name = {
+        "Windows": "mouse-juggler-win",
+        "Darwin": "mouse-juggler-macos",
+        "Linux": "mouse-juggler-linux"
+    }.get(system, "mouse-juggler")
+    
+    # Try to find and upload assets
+    assets = []
+    
+    # Look for executables
+    executables = [
+        f"dist/{base_name}.exe",
+        f"dist/{base_name}-{VERSION}.exe",
+        f"dist/{base_name}",
+        f"dist/{base_name}-{VERSION}",
+    ]
+    
+    for exe in executables:
+        if os.path.exists(exe):
+            assets.append(exe)
+            break
+    
+    # Look for zip files
+    zip_file = f"dist/{base_name}-{VERSION}-full.zip"
+    if os.path.exists(zip_file):
+        assets.append(zip_file)
+    
+    # Upload all found assets
+    for asset in assets:
+        asset_cmd = ["gh", "release", "upload", tag_name, asset]
+        if not run_command(asset_cmd):
+            print(f"Failed to upload asset: {asset}")
+    
+    print(f"GitHub release created: {tag_name}")
     return True
 
 def main():
@@ -152,6 +241,7 @@ def main():
     parser.add_argument("--skip-exe", action="store_true", help="Skip building the executable")
     parser.add_argument("--skip-wheel", action="store_true", help="Skip building Python packages")
     parser.add_argument("--skip-zip", action="store_true", help="Skip creating ZIP releases")
+    parser.add_argument("--skip-github", action="store_true", help="Skip creating GitHub release")
     args = parser.parse_args()
 
     # Display version info
@@ -186,6 +276,13 @@ def main():
         if not create_github_release_info():
             success = False
             print("Warning: GitHub release info creation failed")
+    
+    # Create GitHub release
+    if not args.skip_github and success:
+        print("\n=== Creating GitHub Release ===")
+        if not create_github_release():
+            success = False
+            print("Warning: GitHub release creation failed, but artifacts are available in the dist directory")
     
     if success:
         print("\nRelease generation completed successfully!")

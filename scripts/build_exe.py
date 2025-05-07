@@ -30,10 +30,22 @@ def build_executable():
         "main.py"
     ]
     
-    # Add platform-specific icon if it exists
-    icon_path = Path(f"resources/icons/mouse-juggler-{system}.ico")
-    if icon_path.exists():
-        cmd.extend(["--icon", str(icon_path)])
+    # Check for icons in different possible locations
+    icon_paths = [
+        Path(f"resources/icons/mouse-juggler-{system}.ico"),
+        Path(f"resources/icons/mouse-juggler.ico")
+    ]
+    
+    icon_found = False
+    for icon_path in icon_paths:
+        if icon_path.exists():
+            print(f"Using icon: {icon_path}")
+            cmd.extend(["--icon", str(icon_path)])
+            icon_found = True
+            break
+    
+    if not icon_found:
+        print("Warning: No icon file found. Building without an icon.")
     
     # Run PyInstaller
     try:
@@ -52,6 +64,10 @@ if __name__ == "__main__":
     except ImportError:
         print("PyInstaller is not installed. Installing...")
         subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
+    
+    # Ensure the resources directory exists
+    resources_dir = Path("resources/icons")
+    resources_dir.mkdir(parents=True, exist_ok=True)
     
     # Run the build process
     if build_executable():
