@@ -20,7 +20,7 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            asset_name: mouse-juggler-win.exe
+            asset_name: mouse-juggler-win
             pyinstaller_args: --windowed --icon=docs/images/icon.ico
             python-version: 3.12
           - os: macos-latest
@@ -105,7 +105,9 @@ jobs:
       - name: Prepare Release Assets
         run: |
           mkdir -p release_assets
-          cp artifacts/mouse-juggler-win.exe/mouse-juggler-win.exe release_assets/mouse-juggler-win-${{ env.VERSION }}.exe
+          ls -la artifacts/
+          ls -la artifacts/mouse-juggler-win/
+          cp artifacts/mouse-juggler-win/mouse-juggler-win.exe release_assets/mouse-juggler-win-${{ env.VERSION }}.exe
           cp artifacts/mouse-juggler-macos/mouse-juggler-macos release_assets/mouse-juggler-macos-${{ env.VERSION }}
           cp artifacts/mouse-juggler-linux/mouse-juggler-linux release_assets/mouse-juggler-linux-${{ env.VERSION }}
           chmod +x release_assets/mouse-juggler-macos-${{ env.VERSION }}
