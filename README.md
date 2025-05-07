@@ -1,5 +1,9 @@
 # Mouse Juggler
 
+<div align="center">
+  <img src="resources/icons/mouse-juggler.png" alt="Mouse Juggler Logo" width="150">
+</div>
+
 ![Status](https://img.shields.io/badge/Status-Stable-green)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Python](https://img.shields.io/badge/Python-3.8--3.12-yellow)
