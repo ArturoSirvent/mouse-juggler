@@ -148,7 +148,11 @@ def create_github_release_info():
         f.write("- Performance optimizations for smoother mouse movement\n\n")
         f.write("## Installation\n\n")
         f.write("### Standalone Executable\n\n")
-        f.write("Download the appropriate executable for your platform from the releases section and run it directly.\n\n")
+        f.write("Download the appropriate executable for your platform:\n\n")
+        f.write(f"- Windows: `mouse-juggler-win-{VERSION}.exe`\n")
+        f.write(f"- macOS: `mouse-juggler-macos-{VERSION}`\n")
+        f.write(f"- Linux: `mouse-juggler-linux-{VERSION}`\n\n")
+        f.write("Run the executable directly - no installation needed!\n\n")
         f.write("### Python Package\n\n")
         f.write("```\npip install mouse-juggler\n```\n")
     
@@ -208,18 +212,25 @@ def create_github_release():
     # Try to find and upload assets
     assets = []
     
-    # Look for executables
-    executables = [
-        f"dist/{base_name}.exe",
-        f"dist/{base_name}-{VERSION}.exe",
-        f"dist/{base_name}",
-        f"dist/{base_name}-{VERSION}",
-    ]
+    # Look for executables with correct naming format
+    ext = ".exe" if system == "Windows" else ""
+    executable = f"dist/{base_name}-{VERSION}{ext}"
     
-    for exe in executables:
-        if os.path.exists(exe):
-            assets.append(exe)
-            break
+    if os.path.exists(executable):
+        assets.append(executable)
+    else:
+        print(f"Warning: Expected executable not found: {executable}")
+        # Try alternative naming patterns as fallback
+        alt_patterns = [
+            f"dist/{base_name}{ext}",
+            f"dist/mouse-juggler-{system.lower()}-{VERSION}{ext}",
+            f"dist/mouse-juggler-{system.lower()}{ext}"
+        ]
+        for pattern in alt_patterns:
+            if os.path.exists(pattern):
+                assets.append(pattern)
+                print(f"Found alternative executable: {pattern}")
+                break
     
     # Look for zip files
     zip_file = f"dist/{base_name}-{VERSION}-full.zip"
@@ -231,6 +242,8 @@ def create_github_release():
         asset_cmd = ["gh", "release", "upload", tag_name, asset]
         if not run_command(asset_cmd):
             print(f"Failed to upload asset: {asset}")
+        else:
+            print(f"Successfully uploaded: {asset}")
     
     print(f"GitHub release created: {tag_name}")
     return True

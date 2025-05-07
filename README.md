@@ -11,11 +11,11 @@ Mouse Juggler is an automation tool to move the mouse in a natural way, simulati
 
 ## 📥 Quick Downloads
 
-| System  | Download Link                                                                                                            |
-| ------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Windows | [Download .exe](https://github.com/ArturoSirvent/mouse-juggler/releases/latest/download/mouse-juggler-win.exe)           |
-| macOS   | [Download macOS executable](https://github.com/ArturoSirvent/mouse-juggler/releases/latest/download/mouse-juggler-macos) |
-| Linux   | [Download Linux executable](https://github.com/ArturoSirvent/mouse-juggler/releases/latest/download/mouse-juggler-linux) |
+| System  | Download Link                                                                                                                  |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Windows | [Download .exe](https://github.com/ArturoSirvent/mouse-juggler/releases/download/v1.0.0/mouse-juggler-win-1.0.0.exe)           |
+| macOS   | [Download macOS executable](https://github.com/ArturoSirvent/mouse-juggler/releases/download/v1.0.0/mouse-juggler-macos-1.0.0) |
+| Linux   | [Download Linux executable](https://github.com/ArturoSirvent/mouse-juggler/releases/download/v1.0.0/mouse-juggler-linux-1.0.0) |
 
 For all available versions, visit the [Releases page](https://github.com/ArturoSirvent/mouse-juggler/releases).
 
@@ -158,10 +158,12 @@ You can also manually trigger a release from the GitHub Actions tab.
 
 1. Go to the [Releases](https://github.com/ArturoSirvent/mouse-juggler/releases) page
 2. Download the appropriate version for your operating system:
-    - `mouse-juggler-win64.exe` for Windows
-    - `mouse-juggler-macos` for macOS
-    - `mouse-juggler-linux` for Linux
+    - `mouse-juggler-win-X.Y.Z.exe` for Windows
+    - `mouse-juggler-macos-X.Y.Z` for macOS
+    - `mouse-juggler-linux-X.Y.Z` for Linux
 3. Run the executable directly (no installation needed)
+
+> Note: Replace X.Y.Z with the actual version number (e.g., 1.0.0)
 
 ### Creating a Release Package
 

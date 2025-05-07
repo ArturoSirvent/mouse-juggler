@@ -12,6 +12,14 @@ import shutil
 import subprocess
 from pathlib import Path
 
+# Try to import version from setup.py
+try:
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+    from setup import get_version
+    VERSION = get_version()
+except ImportError:
+    VERSION = "1.0.0"  # Default version if import fails
+
 def build_executable():
     """Build executable for the current platform."""
     system = platform.system().lower()
@@ -25,7 +33,7 @@ def build_executable():
     cmd = [
         "pyinstaller",
         "--onefile",
-        "--name", f"mouse-juggler-{system}",
+        "--name", f"mouse-juggler-{system}-{VERSION}",
         "--clean",
         "main.py"
     ]
@@ -50,7 +58,7 @@ def build_executable():
     # Run PyInstaller
     try:
         subprocess.run(cmd, check=True)
-        print(f"Executable built successfully: dist/mouse-juggler-{system}")
+        print(f"Executable built successfully: dist/mouse-juggler-{system}-{VERSION}")
     except subprocess.CalledProcessError as e:
         print(f"Error building executable: {e}")
         return False
@@ -68,6 +76,8 @@ if __name__ == "__main__":
     # Ensure the resources directory exists
     resources_dir = Path("resources/icons")
     resources_dir.mkdir(parents=True, exist_ok=True)
+    
+    print(f"Building executable version: {VERSION}")
     
     # Run the build process
     if build_executable():
