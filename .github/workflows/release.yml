@@ -127,9 +127,9 @@ jobs:
             Automated release of Mouse Juggler v${{ env.VERSION }}.
 
             ## Downloads
-            - Windows: [mouse-juggler-win-${{ env.VERSION }}.exe](./mouse-juggler-win-${{ env.VERSION }}.exe)
-            - macOS: [mouse-juggler-macos-${{ env.VERSION }}](./mouse-juggler-macos-${{ env.VERSION }})
-            - Linux: [mouse-juggler-linux-${{ env.VERSION }}](./mouse-juggler-linux-${{ env.VERSION }})
+            - Windows: [mouse-juggler-win-${{ env.VERSION }}.exe](https://github.com/ArturoSirvent/mouse-juggler/releases/download/v${{ env.VERSION }}/mouse-juggler-win-${{ env.VERSION }}.exe)
+            - macOS: [mouse-juggler-macos-${{ env.VERSION }}](https://github.com/ArturoSirvent/mouse-juggler/releases/download/v${{ env.VERSION }}/mouse-juggler-macos-${{ env.VERSION }})
+            - Linux: [mouse-juggler-linux-${{ env.VERSION }}](https://github.com/ArturoSirvent/mouse-juggler/releases/download/v${{ env.VERSION }}/mouse-juggler-linux-${{ env.VERSION }})
 
             ## Installation
             Download the appropriate executable for your operating system.
