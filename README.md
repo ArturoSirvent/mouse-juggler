@@ -23,6 +23,29 @@ Mouse Juggler is an automation tool to move the mouse in a natural way, simulati
 
 For all available versions, visit the [Releases page](https://github.com/ArturoSirvent/mouse-juggler/releases).
 
+### Linux Compatibility Note
+
+The Linux executable is built with recent libraries and may require GLIBC 2.38 or newer. If you encounter an error like:
+
+```
+version `GLIBC_2.38' not found
+```
+
+You have these options:
+
+1. **Update your system** (if possible)
+2. **Use the Python package** instead of the executable: `pip install mouse-juggler`
+3. **Build from source** on your own system (see [Building from Source](#building-from-source))
+
+Typical GLIBC versions by distribution:
+
+-   Ubuntu 22.04: GLIBC 2.35
+-   Ubuntu 24.04: GLIBC 2.39
+-   Debian 11: GLIBC 2.31
+-   Debian 12: GLIBC 2.36
+-   Fedora 39: GLIBC 2.38
+-   RHEL/CentOS 9: GLIBC 2.34
+
 ## Features
 
 -   🖱️ Smooth and natural mouse movements using Bezier curves

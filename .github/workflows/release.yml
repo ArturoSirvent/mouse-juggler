@@ -27,7 +27,7 @@ jobs:
             asset_name: mouse-juggler-macos
             pyinstaller_args: --windowed
             python-version: 3.12
-          - os: ubuntu-latest
+          - os: ubuntu-20.04 # Using older Ubuntu for better compatibility
             asset_name: mouse-juggler-linux
             pyinstaller_args: ""
             python-version: 3.12
@@ -134,6 +134,10 @@ jobs:
             ## Installation
             Download the appropriate executable for your operating system.
             No installation needed - just download and run!
+
+            ### Linux Compatibility
+            The Linux executable is built on Ubuntu 20.04 for maximum compatibility with most Linux distributions.
+            If you encounter any issues, please see the README for alternative installation options.
           files: |
             release_assets/mouse-juggler-win-${{ env.VERSION }}.exe
             release_assets/mouse-juggler-macos-${{ env.VERSION }}
