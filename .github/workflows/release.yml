@@ -31,6 +31,7 @@ jobs:
             asset_name: mouse-juggler-linux
             pyinstaller_args: ""
             python-version: 3.12
+            apt_packages: python3-xlib python3-dev libx11-dev libxtst-dev libpng-dev libxkbcommon-dev
 
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +40,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install Linux system dependencies
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ matrix.apt_packages }}
 
       - name: Install dependencies
         run: |
@@ -58,7 +65,7 @@ jobs:
 
       - name: Build with PyInstaller
         run: |
-          pyinstaller --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }} main.py
+          pyinstaller --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }} --hidden-import=pynput.keyboard._xorg --hidden-import=pynput.mouse._xorg main.py
 
       - name: Upload Build Artifact
         id: upload_artifact
